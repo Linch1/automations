@@ -92,7 +92,7 @@ fastify.get('/share', async (request, reply) => {
 
 
 // Start server
-fastify.listen({ port: PORT }, (err, address) => {
+fastify.listen({ port: PORT, host: '0.0.0.0' }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
