@@ -16,7 +16,7 @@ class MessagesHandler {
 
         const chromeProcess = spawn("google-chrome", [
             "--start-fullscreen",
-            `--load-extension=/media/sf_instagram-automation/extension`,
+            `--load-extension=/media/sf_automations/extension`,
             `--profile-directory=${profile}`,
             "https://google.com"
         ]);
@@ -42,7 +42,7 @@ class MessagesHandler {
 
         const chromeProcess = spawn("google-chrome", [
             "--start-fullscreen",
-            `--load-extension=/media/sf_instagram-automation/extension`,
+            `--load-extension=/media/sf_automations/extension`,
             `--profile-directory=${profile}`,
             "https://google.com"
         ]);
