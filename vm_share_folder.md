@@ -1,0 +1,1 @@
+guest vm > settings > shared folders > add path and select auto mount
