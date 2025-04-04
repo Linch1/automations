@@ -1,0 +1,5 @@
+- instagram, pagina bianca quando carica
+- caption ancora non funziona in auto post
+- dopo upload chiudere chrome
+- il client aspetta per l'estensione che si colleghi, ma funziona due volte di seguito
+- post uploadati su una piattaforma devono essere markati come tali
