@@ -13,7 +13,8 @@ const MessageType = {
 
     // client to extension
     OPEN_URL: "OPEN_URL",
-    CREATE_POST: "CREATE_POST"
+    CREATE_POST: "CREATE_POST",
+    POST_CREATED: "POST_CREATED"
    
     
 }
