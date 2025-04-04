@@ -14,7 +14,10 @@ const RequestsUtils = new class {
         CREATE_POST_CUT_SECTION: "[aria-label='Seleziona ritaglio']",
         CREATE_POST_CUT_SECTION_ORIGINAL_DIMENSIONS: "[aria-label='Icona del contorno della foto']",
         CREATE_POST_FILE_UPLOAD: "[aria-label='Icona per rappresentare i contenuti multimediali come immagini o video']",
+        POST_CREATED: "[alt='Spunta animata']",
+        
         POST_CAPTION: "[aria-placeholder='Scrivi una didascalia...']",
+
 
     }
     async waitForSelector(selector, timeout=10_000){

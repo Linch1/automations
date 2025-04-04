@@ -13,7 +13,6 @@ const Actions = new class {
     }
 
     async createPost(fileUrl, caption){
-
         await RequestsUtils.waitForSelector(RequestsUtils.SELECTORS.CREATE_POST_BUTTON);
         await RequestsUtils.openNewPost();
         await Utils.sleep(1000);
@@ -37,6 +36,7 @@ const Actions = new class {
         await RequestsUtils.typeInCaption(caption);
         await Utils.sleep(1000);
         await RequestsUtils.clickNextStepInPostCreation();
+        await RequestsUtils.waitForSelector(RequestsUtils.SELECTORS.POST_CREATED, 60_000);
     }
 
 }

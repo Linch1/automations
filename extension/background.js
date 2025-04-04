@@ -40,11 +40,12 @@ import getInstagramTab from "./src/chrome_query_tab.js";
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
             const tab = tabs[0];
             chrome.tabs.update(tab.id, { url: url }, function(updatedTab) {
-                const listener = function(tabId, changeInfo, newTab) {
+                const listener = async function(tabId, changeInfo, newTab) {
                   if (tabId === updatedTab.id && changeInfo.status === 'complete') {
                     chrome.tabs.onUpdated.removeListener(listener);
                     console.log('✅ Pagina caricata:', newTab.url);
-                    Actions.createPost(fileUrl, caption)
+                    await Actions.createPost(fileUrl, caption)
+                    ServerWs.emit("POST_CREATED", payload);
                   }
                 };
                 chrome.tabs.onUpdated.addListener(listener);
