@@ -31,6 +31,20 @@ export default new class {
         }[platform]
     }
 
+    addUploadedPostToUser(platform, user, postId){
+        let filePath = Paths.getPlatformUploadsPaths(platform);
+        let obj = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+        if(!obj[user]) obj[user] = {};
+        obj[user][postId] = true;
+        fs.writeFileSync(filePath, JSON.stringify(obj));
+    }  
+    
+    wasAlreadyUploaded(platform, user, postId){
+        let filePath = Paths.getPlatformUploadsPaths(platform);
+        let obj = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+        return obj[user]?.[postId]
+    }
+
     getNextUserToScrape(platform, profile){
         return this.getUsersToScrapeSinceLast(platform)[profile][0];
     }

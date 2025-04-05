@@ -17,11 +17,18 @@ class MessagesHandler {
         let {platform, profile, data} = payload;
         console.log(`Recived USER_FEED for profile=${profile} on platform=${platform}`);
 
+        
         let formatData =Object.fromEntries(data.map(item => {
             let post = ServerUtils.getPostMainInformations(item.node)
             return [post.id, post]
         })); 
         ServerUtils.addUserFeedToDownloadJson(platform, formatData);
+        let scrapedUser = formatData[Object.keys(formatData)[0]].username;
+
+        const tracking = fs.existsSync(Paths.TRACKING_PATH) ? JSON.parse(fs.readFileSync(Paths.TRACKING_PATH)) : {};
+        tracking[platform][scrapedUser].count = (tracking[platform][scrapedUser].count || 0) + 1;
+        tracking[platform][scrapedUser].lastScrapedTs = Utils.nowInSecs();
+        fs.writeFileSync(Paths.TRACKING_PATH, JSON.stringify(tracking, null, 2));
 
         for( let id in formatData ){
             let post = formatData[id];

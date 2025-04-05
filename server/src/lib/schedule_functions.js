@@ -53,10 +53,11 @@ export function enrichTrackingWithNewUsers(){
     for(let user of usersPools[platform]){
       if(!tracking[platform]) tracking[platform] = {};
       if(typeof(tracking[platform][user]) == "undefined"){
-        tracking[platform][user] = {lastScrapedTs: 0};
+        tracking[platform][user] = {lastScrapedTs: 0, count: 0};
       }
     }
   }
+  fs.writeFileSync(Paths.TRACKING_PATH, JSON.stringify(tracking, null, 2));
 }
 
 
@@ -186,7 +187,8 @@ export function generateSchedule() {
     generateDaySchedule(schedule, day, dayStart, nextDayStart);
   };
 
-  fs.writeFileSync(Paths.TRACKING_PATH, JSON.stringify(tracking, null, 2));
+  // the tracking will be effectively update once the profile will be scraped
+  //fs.writeFileSync(Paths.TRACKING_PATH, JSON.stringify(tracking, null, 2));
 }
 
 

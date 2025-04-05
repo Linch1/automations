@@ -5,6 +5,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default new class {
+
     DOWNLOADS_DIR = path.join(__dirname, '../../downloads');
     DATA_DIR = path.join(__dirname, '../../data');
     PROFILES_DIR = path.join(this.DATA_DIR, 'profiles');
@@ -25,6 +26,14 @@ export default new class {
     getPlatformScrapingSchedulePath(platform){
         let filepath = path.join(this.SCHEDULE_PATH, "scraping", platform+".json");
         if(!fs.existsSync(path.dirname(filepath)))fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        return filepath;
+    }
+    getPlatformUploadsPaths(platform){
+        let filepath = path.join(this.DATA_DIR, "uploads", platform+".json");
+        if(!fs.existsSync(path.dirname(filepath))) {
+            fs.mkdirSync(path.dirname(filepath), {recursive:true});
+            fs.writeFileSync(filepath, "{}");
+        }
         return filepath;
     }
     getPlatformPostSchedulePath(platform){
