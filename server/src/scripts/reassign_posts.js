@@ -2,7 +2,7 @@ import Paths from "../lib/Paths.js";
 import fs from "fs";
 import path from "path";
 
-async function moveFilesAndRemoveDir(dir1, dir2) {
+async function _moveFiles(dir1, dir2) {
     const subfolders = ['video', 'image'];
 
     for (const subfolder of subfolders) {
@@ -32,15 +32,13 @@ async function moveFilesAndRemoveDir(dir1, dir2) {
         }
     }
 
-    // Rimuovi dir1
-    fs.rmSync(dir1, { recursive: true, force: true });
 }
 
 async function moveFiles( platform, fromUser, toUser ){
     const fromUserDownloads = path.join( Paths.DOWNLOADS_DIR, platform, fromUser);
     const toUserDownlaods = path.join( Paths.DOWNLOADS_DIR, platform, toUser);
     if(!fs.existsSync(fromUserDownloads)) return;
-    await moveFilesAndRemoveDir(fromUserDownloads, toUserDownlaods);
+    await _moveFiles(fromUserDownloads, toUserDownlaods);
 }
 
 const result = {};
