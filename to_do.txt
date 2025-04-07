@@ -5,4 +5,5 @@
 
 - le immagini non vengono caricate perchè le dimensioni del file sono troppo piccole
 
-- post uploadati su una piattaforma devono essere markati come tali
+- fare che se un client riceve piu richieste per usare il browser (scraping/upload post/ altro) le mette in una queue e le fa partire quando la task
+    corrente è finita

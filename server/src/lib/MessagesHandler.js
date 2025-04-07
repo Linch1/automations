@@ -14,16 +14,17 @@ class MessagesHandler {
 
     [MessageType.USER_FEED]= async (socket, payload)=>{
         //let clientConfig = socket.clientConfig;
-        let {platform, profile, data} = payload;
+        let {platform, profile, data, username} = payload;
         console.log(`Recived USER_FEED for profile=${profile} on platform=${platform}`);
 
         
         let formatData =Object.fromEntries(data.map(item => {
             let post = ServerUtils.getPostMainInformations(item.node)
+            post.username  =username;
             return [post.id, post]
         })); 
         ServerUtils.addUserFeedToDownloadJson(platform, formatData);
-        let scrapedUser = formatData[Object.keys(formatData)[0]].username;
+        let scrapedUser = username;
 
         const tracking = fs.existsSync(Paths.TRACKING_PATH) ? JSON.parse(fs.readFileSync(Paths.TRACKING_PATH)) : {};
         tracking[platform][scrapedUser].count = (tracking[platform][scrapedUser].count || 0) + 1;
@@ -32,7 +33,7 @@ class MessagesHandler {
 
         for( let id in formatData ){
             let post = formatData[id];
-            let assetPath = Paths.getDownloadPath(platform, post.username, post.id, post.videoVersions?"video":"image")
+            let assetPath = Paths.getDownloadPath(platform, username, post.id, post.videoVersions?"video":"image")
             if( !fs.existsSync(assetPath) ) {
                 console.log("[downloading] " + assetPath );
                 await ServerUtils.download(assetPath, post.videoVersions?post.videoVersions[0].url:post.imageVersions.candidates[0].url);

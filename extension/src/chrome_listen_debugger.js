@@ -18,7 +18,7 @@ async function allEventHandler(debuggeeId, message, params) {
             { tabId: debuggeeId.tabId },
             "Network.getResponseBody",
             { requestId: params.requestId },
-            function(response) {
+            async function(response) {
                 if (chrome.runtime.lastError) {
                     console.error("Error getting response body:", chrome.runtime.lastError.message);
                     delete requestMap[params.requestId];
@@ -29,8 +29,9 @@ async function allEventHandler(debuggeeId, message, params) {
                     const data = JSON.parse(response.body)?.data;
                     const postsProperty = "xdt_api__v1__feed__user_timeline_graphql_connection";
                     if (data?.[postsProperty]) {
+                        let tabUrl = await Utils.getTabUrl(debuggeeId.tabId);
                         console.log("Response Body:", data[postsProperty].edges);
-                        ServerWs.emit("USER_FEED", data[postsProperty].edges);
+                        ServerWs.emit("USER_FEED", {edges: data[postsProperty].edges, tabUrl});
                     }
                 } catch (err) {
                     console.warn("Failed to parse response:", err);

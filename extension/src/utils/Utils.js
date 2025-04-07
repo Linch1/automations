@@ -9,6 +9,18 @@ const Utils = new class {
             });
         });
     }
+    getTabUrl(tabId){
+        return new Promise( (res) => {
+            chrome.tabs.get(tabId, function(tab) {
+                if (chrome.runtime.lastError) {
+                    console.error("Error getting tab info:", chrome.runtime.lastError.message);
+                    return;
+                }
+                res(tab.url)
+            });
+        })
+        
+    }
     sleep(ms) {
         return new Promise( (res) => {
             setTimeout( res, ms );

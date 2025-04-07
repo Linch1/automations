@@ -11,7 +11,7 @@ import getInstagramTab from "./src/chrome_query_tab.js";
     ServerWs.on("OPEN_URL", (payload) => {
 
         console.log("Recived OPEN_URL request", payload);
-        let {url} = payload;
+        let {url, username} = payload;
         
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
             const tab = tabs[0];
