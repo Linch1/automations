@@ -68,7 +68,7 @@ for (const platform of platforms) {
             for( let post of posts ){
                 if(post.username != user) {
                     console.log(`[diff] real_user: ${user} -> post user: ${post.username}`);
-                    await moveFiles(post.username, user);
+                    await moveFiles(platform, post.username, user);
                     post.username = user;
                 }
             }
