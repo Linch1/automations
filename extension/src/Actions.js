@@ -34,9 +34,9 @@ const Actions = new class {
         await RequestsUtils.clickNextStepInPostCreation();
         await Utils.sleep(1000);
         await RequestsUtils.typeInCaption(caption);
-        await Utils.sleep(60_000);
+        await Utils.sleep(10_000);
         await RequestsUtils.clickNextStepInPostCreation();
-        await RequestsUtils.waitForSelector(RequestsUtils.SELECTORS.POST_CREATED, 60_000);
+        await Utils.sleep(60_000);
     }
 
 }
