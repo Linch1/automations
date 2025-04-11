@@ -125,12 +125,20 @@ export default new class {
     }
 
     addUserFeedToDownloadJson(platform, feed){
-        let jsonPath = Paths.getDownloadJsonPath(platform, feed[Object.keys(feed)[0]].username);
+        let username = feed[Object.keys(feed)[0]].username;
+        let jsonPath = Paths.getDownloadJsonPath(platform, username);
         let data;
         if(fs.existsSync(jsonPath)){
             data = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
         }
-        data = {...data, ...feed};
+        for( let postId in feed ){
+            if( data[postId] ) {
+                console.log("Removing from feed already downloaded post=", postId);
+                delete feed[postId];
+            }
+        }
+        console.log(`[adding] ${Object.keys(feed).length} posts for user=${username}`);
+        data = {...feed, ...data};
         fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
     }
 
