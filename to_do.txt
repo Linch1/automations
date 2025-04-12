@@ -8,10 +8,6 @@
 - fare che se un client riceve piu richieste per usare il browser (scraping/upload post/ altro) le mette in una queue e le fa partire quando la task
     corrente è finita
 
-- rimuovere standby alla vm
 
 - agigungere nel backoffice che la sezione liked mostra anche
 un bottone per far vedere o no i post gia caricati
-
-- aggiungere nel backoffice dei bottoni veloci per selezionare
-solo una categoria

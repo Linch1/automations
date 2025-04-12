@@ -11,12 +11,11 @@ import { Filters } from "@/components/filters";
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { ToastAction } from "@/components/ui/toast"
-
+import {ChangeCategory} from "@/components/change-category";
 
 export function SwipeCards() {
-  const { showOnlyLiked, allPosts, selectedPlatforms, selectedCategories } = useSocialData()
+  const { showOnlyLiked, allPosts, selectedPlatforms, selectedCategories, likedPostsIds } = useSocialData()
 
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(null);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const { toast } = useToast();
@@ -24,41 +23,35 @@ export function SwipeCards() {
   // Filtra i post in base alle piattaforme selezionate
   useEffect(() => {
     
-    const filtered = allPosts
+    let filtered = allPosts
       .filter((post) => selectedPlatforms.includes(post.platform))
       .filter((post) => selectedCategories.includes(post.category))
 
+    // remove already liked posts if we are in tinder mode
+    if(!showOnlyLiked) filtered = filtered.filter((post) => !likedPostsIds.includes(post.id))
+      
     setFilteredPosts(filtered)
-    setCurrentIndex(0) // Resetta l'indice quando cambia il filtro
-  }, [allPosts, selectedPlatforms, selectedCategories])
 
-  const handleSwipe = (dir) => {
-    setDirection(dir)
+  }, [allPosts, selectedPlatforms, selectedCategories, likedPostsIds])
 
-    // Simula un breve ritardo per l'animazione
-    setTimeout(() => {
-      if (currentIndex < filteredPosts.length - 1) {
-        setCurrentIndex(currentIndex + 1)
-      } else {
-        // Ricomincia da capo se hai raggiunto la fine
-        setCurrentIndex(0)
-      }
-      setDirection(null)
-    }, 300)
-  }
+  const handleSwipe = (dir) => {}
 
   if (filteredPosts.length === 0) {
     return (
       <>
       <Filters />
-      <div className="flex justify-center items-center h-64">
-        <p className="text-gray-500">Nessun contenuto disponibile per le piattaforme selezionate.</p>
+      <div className="flex justify-center items-center mt-[60px] mb-2">
+        <p className="text-gray-500">
+          Nessun contenuto disponibile per le piattaforme selezionate.<br/>
+          Prova a cambiare categoria.
+        </p>
       </div>
+      <ChangeCategory normalFlex={true}/>
       </>
     )
   }
 
-  const currentPost = filteredPosts[currentIndex]
+  const currentPost = filteredPosts[0]
 
   return (
     <div className="relative h-[70vh] w-full">
@@ -70,23 +63,25 @@ export function SwipeCards() {
         </Badge>
       </div>
       
-      <AnimatePresence>
-        {direction === null && (
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{
-              x: direction === "left" ? -300 : direction === "right" ? 300 : 0,
-              opacity: 0,
-            }}
-            transition={{ duration: 0.3 }}
-            className="absolute w-full h-full"
-          >
-            <ContentCard platform={currentPost.platform} username={currentPost.username} post={currentPost} handleSwipe={handleSwipe} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {
+        currentPost ?
+        <AnimatePresence>
+          {direction === null && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{
+                x: direction === "left" ? -300 : direction === "right" ? 300 : 0,
+                opacity: 0,
+              }}
+              transition={{ duration: 0.3 }}
+              className="absolute w-full h-full"
+            >
+              <ContentCard platform={currentPost.platform} username={currentPost.username} post={currentPost} handleSwipe={handleSwipe} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      : <></>}
 
       
     </div>

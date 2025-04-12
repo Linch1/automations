@@ -9,10 +9,12 @@ import Image from "next/image"
 import { SwipeButtons } from "./swipe-buttons"
 import VideoPlayer from "./video-player"
 import { useSocialData } from "@/context/social-data-context"
+import { ChangeCategory } from "@/components/change-category";
 
 export function ContentCard({ platform, username, post, handleSwipe }) {
 
-  const {showOnlyLiked} = useSocialData();
+  const {showOnlyLiked, likedPostsIds, setLikedPostsIds} = useSocialData();
+  
 
   const [showCaption, setShowCaption] = useState(false)
 
@@ -23,6 +25,7 @@ export function ContentCard({ platform, username, post, handleSwipe }) {
   async function postSwipe(dir){
     if(!showOnlyLiked){
       await fetch( process.env.NEXT_PUBLIC_SERVER + `/swipe?direction=${dir}&username=${post.username}&platform=${post.platform}&postId=${post.id}`);
+      setLikedPostsIds(old=>[...old, post.id]);
     } else {
       
     }
@@ -58,15 +61,7 @@ export function ContentCard({ platform, username, post, handleSwipe }) {
           </Badge>
         </div>
 
-        {/* Pulsante per mostrare/nascondere la caption */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute bottom-4 right-4 bg-black/50 z-[30] text-white rounded-full border-[1px] border-solid border-white hover:bg-black/70"
-          onClick={toggleCaption}
-        >
-          {showCaption ? <X size={20} className="" /> : <MessageSquare size={20} />}
-        </Button>
+        
 
         {/* Caption */}
         {showCaption && (
@@ -76,7 +71,21 @@ export function ContentCard({ platform, username, post, handleSwipe }) {
         )}
       </CardContent>
     </Card>
-    
+
+    {/* Pulsante per mostrare/nascondere la caption */}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="absolute bottom-4 right-4 bg-black/50 z-[30] text-white rounded-full border-[1px] border-solid border-white hover:bg-black/70"
+      onClick={toggleCaption}
+    >
+      {showCaption ? <X size={20} className="" /> : <MessageSquare size={20} />}
+    </Button>
+        
+    <div className="absolute bottom-[70px] right-4 w-fit" >
+      <ChangeCategory />
+    </div>
+
     <div className="absolute bottom-4 left-0 right-0">
         <SwipeButtons post={post} isTinderMode={!showOnlyLiked} onSwipe={postSwipe} />
     </div>

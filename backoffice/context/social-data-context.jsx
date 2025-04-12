@@ -6,7 +6,8 @@ const SocialDataContext = createContext(undefined)
 
 export function SocialDataProvider({ children }) {
   const [socialData, setSocialData] = useState({})
-  const [allPosts, setAllPosts] = useState([])
+  const [allPosts, setAllPosts] = useState([]);
+  const [likedPostsIds, setLikedPostsIds] = useState([]);
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null);
 
@@ -84,6 +85,7 @@ export function SocialDataProvider({ children }) {
         allPosts,
         loading,
         error,
+        likedPostsIds, setLikedPostsIds,
 
         showOnlyLiked, 
         setShowOnlyLiked,
