@@ -18,6 +18,7 @@ export function SwipeCards() {
 
   const [direction, setDirection] = useState(null);
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [currentPostIndex, setCurrentPostIndex] = useState(null);
   const { toast } = useToast();
 
   // Filtra i post in base alle piattaforme selezionate
@@ -30,11 +31,18 @@ export function SwipeCards() {
     // remove already liked posts if we are in tinder mode
     if(!showOnlyLiked) filtered = filtered.filter((post) => !likedPostsIds.includes(post.id))
       
-    setFilteredPosts(filtered)
+    setFilteredPosts(filtered);
+    setCurrentPostIndex(filtered[0]);
 
   }, [allPosts, selectedPlatforms, selectedCategories, likedPostsIds])
 
-  const handleSwipe = (dir) => {}
+  const handleSwipe = (dir) => {
+    if( dir == "right" && showOnlyLiked){
+      setCurrentPostIndex( o => {
+        return o+1 >= filteredPosts.length ? 0 : o+1;
+      })
+    }
+  }
 
   if (filteredPosts.length === 0) {
     return (
@@ -51,8 +59,8 @@ export function SwipeCards() {
     )
   }
 
-  const currentPost = filteredPosts[0]
-
+  
+  const currentPost = filteredPosts[currentPostIndex];
   return (
     <div className="relative h-[70vh] w-full">
 

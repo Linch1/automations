@@ -1,4 +1,4 @@
-- instagram, pagina bianca quando carica
+- instagram, pagina bianca quando carica, aggiungere logica che la refresha
 - caption ancora non funziona in auto post
 
 - il client aspetta per l'estensione che si colleghi, ma funziona due volte di seguito ?
@@ -11,3 +11,8 @@
 
 - agigungere nel backoffice che la sezione liked mostra anche
 un bottone per far vedere o no i post gia caricati
+
+- aggiungere upload forzato (quindi anche se il post è gia stato caricato)
+
+- fare una gui dove puoi caricare il media in un altra lingua e lo indicizza bene, al momento dell'upload puoi selezionare la lingua in cui caricare,
+    oppure specificarla nel json del profilo.
