@@ -2,6 +2,7 @@ import { WebSocketServer } from 'ws';
 import MessagesHandler from './MessagesHandler.js';
 import Connections from './Connections.js';
 import Utils from '../../../../shared/Utils.js';
+import MasterMessageHandler from "../master/MessagesHandler.js"
 
 export default new class {
 
@@ -19,6 +20,13 @@ export default new class {
             this._lastConnection = {ts: Utils.nowInSecs(), socket};
 
             socket = Utils.rewrapSocket(socket);
+            socket.killChrome = () => {
+                if(socket.chromeProcess) {
+                    socket.chromeProcess.kill();
+                    delete socket.chromeProcess;
+                }
+                MasterMessageHandler.endChromeTask();
+            }
 
             socket.id = this._socketId;
             this.sockets[this._socketId] = socket;

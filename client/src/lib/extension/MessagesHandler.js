@@ -2,6 +2,7 @@ import MessageType from "../../../../shared/MessageType.js";
 import Connections from "./Connections.js";
 import MasterWs from "../master/Ws.js";
 
+
 class MessagesHandler {
 
     [MessageType.USER_FEED] = (socket, payload)=>{
@@ -10,8 +11,9 @@ class MessagesHandler {
         let {edges, tabUrl} = payload;
         let username = tabUrl.split("/")[ tabUrl.split("/").length - 1];
         console.log(`Sending user feed to master profile=${profile} platform=${platform}`)
-        
-        socket.chromeProcess.kill(); // chrome process is setted in master/messageshandler on the OPEN_BROWSER request is recived
+
+        socket.killChrome();
+
         MasterWs.send({type: MessageType.USER_FEED, payload: {profile, platform, data: edges, username}});
     }
 
@@ -19,7 +21,9 @@ class MessagesHandler {
         let profile = socket.profile;
         let platform = socket.platform;
         console.log(`Sending user feed to master profile=${profile} platform=${platform}`)
-        socket.chromeProcess.kill(); // chrome process is setted in master/messageshandler on the OPEN_BROWSER request is recived
+        
+        socket.killChrome(); // chrome process is setted in master/messageshandler on the OPEN_BROWSER request is recived
+        
         //MasterWs.send({type: MessageType.USER_FEED, payload: {profile, platform,data:payload}});
     }
     

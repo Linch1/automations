@@ -4,7 +4,44 @@ import ExtensionWs from "../extension/Ws.js";
 import Utils from "../../../../shared/Utils.js";
 import { type } from "os";
 
+
 class MessagesHandler {
+
+    constructor(){
+        this._chromeBusy = false;
+        this._queue = [];
+        this.loopTasks();
+    }
+
+    async startChromeTask(){
+        await this.waitForChromTaskToEnd();
+        this._chromeBusy = true;
+    }
+
+    async waitForChromTaskToEnd(){
+        while(this._chromeBusy){
+            await Utils.sleep(5000);
+        }
+    }
+
+    async endChromeTask(){
+        this._chromeBusy = false;
+    }
+
+    async loopTasks(){
+        while(true){
+            let task = this._queue.shift();
+            if(task){
+                await this.startChromeTask();
+                this[task.type](task.payload);
+            }
+            await Utils.sleep(1000);
+        }
+    }
+
+    addTask(task){
+        this._queue.push(task);
+    }
 
     [MessageType.OPEN_BROWSER] = async (payload) => {
         console.log("Recived open browser with payload=", payload);
@@ -55,7 +92,6 @@ class MessagesHandler {
         await Utils.sleep(2000);
         let extensionSocket = await ExtensionWs.connections.get(profile);
         extensionSocket.chromeProcess = chromeProcess;
-
         extensionSocket.send({type: MessageType.CREATE_POST, payload: {url, caption, fileUrl}});
     }
 
@@ -75,7 +111,8 @@ class MessagesHandler {
         if(!this[message.type]){
             return console.warn("Recived unhandled message type", message);
         }
-        return this[message.type](message.payload);
+
+        this.addTask(message);
     }
 
 }
