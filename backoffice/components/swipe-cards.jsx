@@ -32,7 +32,7 @@ export function SwipeCards() {
     if(!showOnlyLiked) filtered = filtered.filter((post) => !likedPostsIds.includes(post.id))
       
     setFilteredPosts(filtered);
-    setCurrentPostIndex(filtered[0]);
+    setCurrentPostIndex(0);
 
   }, [allPosts, selectedPlatforms, selectedCategories, likedPostsIds])
 
