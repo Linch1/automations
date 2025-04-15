@@ -37,9 +37,16 @@ export function SwipeCards() {
   }, [allPosts, selectedPlatforms, selectedCategories, likedPostsIds])
 
   const handleSwipe = (dir) => {
-    if( dir == "right" && showOnlyLiked){
+    if( showOnlyLiked){
+      console.log("swiping: ", dir)
       setCurrentPostIndex( o => {
-        return o+1 >= filteredPosts.length ? 0 : o+1;
+        if(dir == "right"){
+          return o+1 >= filteredPosts.length ? 0 : o+1;
+        } else {
+          console.log(o-1)
+          return o-1 <= 0 ? 0 : o-1;
+        }
+        
       })
     }
   }

@@ -4,12 +4,13 @@ import { useState, useRef, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, Share2, X } from "lucide-react"
+import { Heart, HeartIcon, MessageCircle, MessageSquare, Play, Share2, X } from "lucide-react"
 import Image from "next/image"
 import { SwipeButtons } from "./swipe-buttons"
 import VideoPlayer from "./video-player"
 import { useSocialData } from "@/context/social-data-context"
 import { ChangeCategory } from "@/components/change-category";
+import Utils from "@/utils/Utils"
 
 export function ContentCard({ platform, username, post, handleSwipe }) {
 
@@ -52,20 +53,30 @@ export function ContentCard({ platform, username, post, handleSwipe }) {
         }
 
         {/* Tag piattaforma e username */}
-        <div className="absolute top-4 left-4 flex gap-2">
-          <Badge variant="outline" className="bg-black/70 text-white">
-            {platform}
-          </Badge>
-          <Badge variant="outline" className="bg-black/70 text-white border-none">
-            @{username}
-          </Badge>
-          {
-            post.uploadedTs ? <Badge variant="outline" className="bg-black/70 text-white border-none">
-              <Share2 />
-            </Badge> : <></>
-          }
-        </div>
+        <div className="absolute top-4 left-4 ">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline" className="bg-black/70 text-white">
+              {platform}
+            </Badge>
+            <Badge variant="outline" className="bg-black/70 text-white border-none">
+              @{username}
+            </Badge>
+            {
+              post.uploadedTs ? <Badge variant="outline" className="bg-black/70 text-white border-none">
+                <Share2 />
+              </Badge> : <></>
+            }
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge variant="outline" className="bg-black/70 text-white">
+              {post.comments} &nbsp; <MessageCircle width={17} />
+            </Badge>
 
+            <Badge variant="outline" className="bg-black/70 text-white">
+              {Utils.formatCompactNumber(post.likes)} &nbsp; <HeartIcon width={17} />
+            </Badge>
+          </div>
+        </div>
         
 
         {/* Caption */}

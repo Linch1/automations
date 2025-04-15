@@ -9,5 +9,16 @@ const Utils = new class {
 
         return `${dd}/${mm}/${yyyy} - ${hh}:${min}`;
     }
+    formatCompactNumber(num) {
+        if (num < 1000) return num.toString();
+      
+        if (num < 1_000_000) {
+          const result = num / 1000;
+          return result % 1 === 0 ? `${result}k` : `${result.toFixed(1)}k`;
+        }
+      
+        const result = num / 1_000_000;
+        return result % 1 === 0 ? `${result}M` : `${result.toFixed(2)}M`;
+    }
 }
 export default Utils;
