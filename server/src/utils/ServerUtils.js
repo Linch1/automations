@@ -35,7 +35,7 @@ export default new class {
         let filePath = Paths.getPlatformUploadsPaths(platform);
         let obj = JSON.parse(fs.readFileSync(filePath, "utf-8"));
         if(!obj[user]) obj[user] = {};
-        obj[user][postId] = true;
+        obj[user][postId] = Utils.nowInSecs();
         fs.writeFileSync(filePath, JSON.stringify(obj));
     }  
     
@@ -229,7 +229,7 @@ export default new class {
                             post.image = `/${platform}/${user}/image/${post.id}.jpg`;
                             delete post.imageVersions;
                         }
-                        post.uploaded = this.wasAlreadyUploaded(platform, user, post.id);
+                        post.uploadedTs = this.wasAlreadyUploaded(platform, user, post.id);
                         post.category = usersCategories[platform][user];
                         posts[post.id] = post;
                     }
