@@ -229,6 +229,7 @@ export default new class {
                             post.image = `/${platform}/${user}/image/${post.id}.jpg`;
                             delete post.imageVersions;
                         }
+                        post.uploaded = this.wasAlreadyUploaded(platform, user, post.id);
                         post.category = usersCategories[platform][user];
                         posts[post.id] = post;
                     }
