@@ -170,7 +170,7 @@ export default new class {
         }
     }
 
-    async traverseDownloads( liked=false ) {
+    async traverseDownloads( liked=false, uploaded=false ) {
         
         const usersCategories = {};
         const categoriesDict = {};
@@ -214,8 +214,11 @@ export default new class {
                     let posts = {};
 
                     let filteredPosts = Object.values(JSON.parse(content))
+
                     if(!liked) filteredPosts = filteredPosts.filter(p => !p.swipe);
                     else filteredPosts = filteredPosts.filter(p => p.swipe == "right");
+
+                    if(!uploaded) filteredPosts = filteredPosts.filter(p => !this.wasAlreadyUploaded(platform, user, p.id));
 
                     for( let post of filteredPosts ){
                         if(post.videoVersions) {
@@ -229,6 +232,7 @@ export default new class {
                         post.category = usersCategories[platform][user];
                         posts[post.id] = post;
                     }
+
                     result[platform][user] = posts;
                 } catch (err) {
                     console.error(`Failed to read or parse ${downloadsFile}:`, err);

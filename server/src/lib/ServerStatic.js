@@ -54,7 +54,9 @@ fastify.get('/*', async (request, reply) => {
 // Add custom endpoint
 fastify.get('/users', async (request, reply) => {
   request.query.liked = request.query.liked === "true";
-  return {status: true, response: await ServerUtils.traverseDownloads(request.query.liked)};
+  request.query.uploaded = request.query.uploaded === "true";
+
+  return {status: true, response: await ServerUtils.traverseDownloads(request.query.liked, request.query.uploaded)};
 });
 
 fastify.get('/swipe', async (request, reply) => {
@@ -62,7 +64,7 @@ fastify.get('/swipe', async (request, reply) => {
   return {status: true};
 });
 
-fastify.get('/share', async (request, reply) => {
+fastify.get('/upload', async (request, reply) => {
   let {platform, username, postId, isVideo, direction} =  request.query;
   
   let profile = await ServerUtils.findProfileThatManageUsername(username);
