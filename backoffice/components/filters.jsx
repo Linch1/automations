@@ -1,6 +1,6 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react"
-import { FilterIcon, Heart, HeartHandshake, HeartIcon, HeartPulse, X } from "lucide-react"
+import { FilterIcon, Heart, HeartHandshake, HeartIcon, HeartPulse, X, Share2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Filter } from "@/components/filter"
 import { useSocialData } from "@/context/social-data-context"
@@ -19,7 +19,8 @@ export function Filters() {
     const { 
         availablePlatforms, selectedPlatforms, setSelectedPlatforms,
         selectedCategories, setSelectedCategories, availableCategories,
-        showOnlyLiked, setShowOnlyLiked, 
+        showOnlyLiked, setShowOnlyLiked,
+        showUploaded, setShowUploaded 
     } = useSocialData()
 
     return (
@@ -32,6 +33,17 @@ export function Filters() {
             >
                 {showOnlyLiked?<HeartHandshake/>:<Heart />}
             </Badge>
+            {
+                showOnlyLiked ?
+                <Badge 
+                    variant="outline" 
+                    className={(showUploaded?"bg-green-600 text-white":"bg-white text-black") + " mb-3 cursor-pointer  border-green flex items-center justify-center w-fit w-[40px] h-[40px]"}
+                    onClick={()=>setShowUploaded(o=>!o)}
+                >
+                    {showUploaded?<Share2/>:<Share2 />}
+                </Badge> : <></>
+            }
+            
 
             <Dialog>
                 <DialogTrigger asChild>

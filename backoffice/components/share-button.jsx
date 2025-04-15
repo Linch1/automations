@@ -23,6 +23,8 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Button } from "./ui/button";
+import { useToast } from "@/hooks/use-toast"
+import Utils from "@/utils/Utils";
 
 
 export function ShareButton({
@@ -31,11 +33,12 @@ export function ShareButton({
 
     const {availablePlatforms} = useSocialData();
     const [platform, setPlatform] = useState();
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
+    const { toast } = useToast()
 
     const share = async () => {
         setOpen(false);
-        await fetch( process.env.NEXT_PUBLIC_SERVER + `/share?username=${post.username}&platform=${post.platform}&postId=${post.id}&isVideo=${typeof(post.video)=="string"}`);
+        await fetch( process.env.NEXT_PUBLIC_SERVER + `/upload?username=${post.username}&platform=${post.platform}&postId=${post.id}&isVideo=${typeof(post.video)=="string"}`);
         console.log("Sharing post", post);
     }
     return (
@@ -45,7 +48,16 @@ export function ShareButton({
                 variant="outline"
                 size="icon"
                 className="h-14 w-14 rounded-full bg-white border-2 border-green hover:bg-green-50"
-                onClick={()=>setOpen(true)}
+                onClick={()=>{
+                    if(post.uploadedTs){
+                        toast({
+                            title: "Post already uploaded",
+                            description: "Post was uploaded on " +  Utils.formatTimestamp(post.uploadedTs)
+                        })
+                    } else {
+                        setOpen(true)
+                    }
+                }}
                 >
                     <Share />
                 </Button>

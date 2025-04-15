@@ -13,6 +13,7 @@ export function SocialDataProvider({ children }) {
 
 
   const [showOnlyLiked, setShowOnlyLiked] = useState(false);
+  const [showUploaded, setShowUploaded] = useState(false);
 
   const [availablePlatforms, setAvailablePlatforms] = useState([])
   const [selectedPlatforms, setSelectedPlatforms] = useState([])
@@ -20,11 +21,11 @@ export function SocialDataProvider({ children }) {
   const [availableCategories, setAvailableCategories] = useState([])
   const [selectedCategories, setSelectedCategories] = useState([])
 
-  const fetchMedias = async (liked=false) => {
+  const fetchMedias = async (liked=false, uploaded=false) => {
     try {
       // Simulazione di una chiamata API
       // In un'applicazione reale, sostituire con l'endpoint effettivo
-      const response = await fetch( process.env.NEXT_PUBLIC_SERVER + `/users?liked=${liked}`)
+      const response = await fetch( process.env.NEXT_PUBLIC_SERVER + `/users?liked=${liked}&uploaded=${uploaded}`)
 
       if (!response.ok) {
         throw new Error("Errore nel caricamento dei dati")
@@ -51,8 +52,8 @@ export function SocialDataProvider({ children }) {
   }
 
   useEffect(() => {
-    fetchMedias(showOnlyLiked)
-  }, [showOnlyLiked])
+    fetchMedias(showOnlyLiked, showUploaded);
+  }, [showOnlyLiked, showUploaded])
 
   // Funzione per estrarre tutti i post in un unico array
   const extractAllPosts = (data) => {
@@ -89,6 +90,9 @@ export function SocialDataProvider({ children }) {
 
         showOnlyLiked, 
         setShowOnlyLiked,
+
+        showUploaded, 
+        setShowUploaded,
 
         selectedPlatforms,
         setSelectedPlatforms,

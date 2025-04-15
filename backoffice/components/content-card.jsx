@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, X } from "lucide-react"
+import { MessageSquare, Share2, X } from "lucide-react"
 import Image from "next/image"
 import { SwipeButtons } from "./swipe-buttons"
 import VideoPlayer from "./video-player"
@@ -59,6 +59,11 @@ export function ContentCard({ platform, username, post, handleSwipe }) {
           <Badge variant="outline" className="bg-black/70 text-white border-none">
             @{username}
           </Badge>
+          {
+            post.uploadedTs ? <Badge variant="outline" className="bg-black/70 text-white border-none">
+              <Share2 />
+            </Badge> : <></>
+          }
         </div>
 
         
