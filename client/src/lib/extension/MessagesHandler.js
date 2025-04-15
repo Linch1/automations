@@ -12,9 +12,9 @@ class MessagesHandler {
         let username = tabUrl.split("/")[ tabUrl.split("/").length - 1];
         console.log(`Sending user feed to master profile=${profile} platform=${platform}`)
 
-        socket.killChrome();
-
         MasterWs.send({type: MessageType.USER_FEED, payload: {profile, platform, data: edges, username}});
+
+        socket.endTask();
     }
 
     [MessageType.POST_CREATED] = (socket, payload)=>{
@@ -22,7 +22,7 @@ class MessagesHandler {
         let platform = socket.platform;
         console.log(`Sending user feed to master profile=${profile} platform=${platform}`)
         
-        socket.killChrome(); // chrome process is setted in master/messageshandler on the OPEN_BROWSER request is recived
+        socket.endTask();
         
         //MasterWs.send({type: MessageType.USER_FEED, payload: {profile, platform,data:payload}});
     }

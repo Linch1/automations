@@ -20,9 +20,8 @@ export default new class {
             this._lastConnection = {ts: Utils.nowInSecs(), socket};
 
             socket = Utils.rewrapSocket(socket);
-            socket.killChrome = () => {
+            socket.endTask = () => {
                 if(socket.chromeProcess) {
-                    socket.chromeProcess.kill();
                     delete socket.chromeProcess;
                 }
                 MasterMessageHandler.endChromeTask();

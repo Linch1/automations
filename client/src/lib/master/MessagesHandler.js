@@ -8,9 +8,27 @@ import { type } from "os";
 class MessagesHandler {
 
     constructor(){
+
         this._chromeBusy = false;
+        this._chromeProcess = null;
+        this._runningChromeTaskTimeoutTs = null;
+
         this._queue = [];
         this.loopTasks();
+    }
+
+    spawnChrome(profile, timeoutSecs=60*10/*10 minutes*/){
+        let chromeProcess = spawn("google-chrome", [
+            "--start-fullscreen",
+            `--load-extension=/media/sf_automations/extension`,
+            `--profile-directory=${profile}`,
+            "https://google.com"
+        ]);
+        
+        this._chromeProcess = chromeProcess;
+        this._runningChromeTaskTimeoutTs = Utils.nowInSecs() + timeoutSecs;
+
+        return chromeProcess;
     }
 
     async startChromeTask(){
@@ -26,15 +44,29 @@ class MessagesHandler {
 
     async endChromeTask(){
         this._chromeBusy = false;
+        this._chromeProcess.kill();
+        delete this._runningChromeTaskTimeoutTs;
     }
 
     async loopTasks(){
+
+        let task = null;
         while(true){
-            let task = this._queue.shift();
-            if(task){
+
+            if(!this._chromeBusy){
+                task = this._queue.shift();
+                if(task){
+                    await this.startChromeTask();
+                    this[task.type](task.payload);
+                }
+            }
+
+            if( this._chromeBusy && this._runningChromeTaskTimeoutTs && Utils.nowInSecs() > this._runningChromeTaskTimeoutTs ){ /*Retry task, it has timeout*/
+                this.endChromeTask();
                 await this.startChromeTask();
                 this[task.type](task.payload);
             }
+
             await Utils.sleep(1000);
         }
     }
@@ -51,12 +83,7 @@ class MessagesHandler {
         
         this._connecting = true;
 
-        const chromeProcess = spawn("google-chrome", [
-            "--start-fullscreen",
-            `--load-extension=/media/sf_automations/extension`,
-            `--profile-directory=${profile}`,
-            "https://google.com"
-        ]);
+        const chromeProcess = this.spawnChrome(profile)
 
         console.log("Waiting for extension to connect");
         await ExtensionWs.waitForConnection(profile, platform);
@@ -77,12 +104,7 @@ class MessagesHandler {
         
         this._connecting = true;
 
-        const chromeProcess = spawn("google-chrome", [
-            "--start-fullscreen",
-            `--load-extension=/media/sf_automations/extension`,
-            `--profile-directory=${profile}`,
-            "https://google.com"
-        ]);
+        const chromeProcess = this.spawnChrome(profile)
 
         console.log("Waiting for extension to connect");
         await ExtensionWs.waitForConnection(profile, platform);

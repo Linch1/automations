@@ -1,13 +1,8 @@
-- instagram, pagina bianca quando carica, aggiungere logica che la refresha
+
+
 - caption ancora non funziona in auto post
 
-- il client aspetta per l'estensione che si colleghi, ma funziona due volte di seguito ?
-
 - le immagini non vengono caricate perchè le dimensioni del file sono troppo piccole
-
-- fare che se un client riceve piu richieste per usare il browser (scraping/upload post/ altro) le mette in una queue e le fa partire quando la task
-    corrente è finita
-
 
 - agigungere nel backoffice che la sezione liked mostra anche
 un bottone per far vedere o no i post gia caricati
