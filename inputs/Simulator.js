@@ -1,5 +1,6 @@
 const { spawn, execSync } = require("child_process");
 const path = require("path");
+const fs = require("fs");
 
 async function sleep(ms) {
   return new Promise((res) => setTimeout(res, ms));
@@ -13,14 +14,20 @@ const Simulator = new (class {
    * @param {number} dragEndY - Posizione finale Y del trascinamento
    */
   async fileDrag(filePath, dragEndX, dragEndY) {
+
     if (!path.isAbsolute(filePath)) {
       console.error("Il percorso del file deve essere assoluto.");
       return;
     }
 
+    let tmpPath;
     try {
       // 🟢 Lancia Nautilus e prendi il PID
-      const nautilus = spawn("nautilus", ["--select", filePath], {
+      tmpPath = path.join( "/tmp/input/dragdrop", path.basename(filePath));
+      fs.mkdirSync(tmpPath, {recursive:true});
+      fs.copyFileSync(filePath, tmpPath);
+      
+      const nautilus = spawn("nautilus", ["--select", tmpPath], {
         detached: true,
         stdio: "ignore"
       });
@@ -72,6 +79,10 @@ const Simulator = new (class {
 
     } catch (error) {
       console.error("Errore durante l'interazione:", error);
+    } finally {
+      if(tmpPath){
+        if(fs.existsSync(tmpPath)) fs.rmSync(tmpPath)
+      }
     }
   }
 })();
