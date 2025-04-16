@@ -1,6 +1,6 @@
 const { exec, execSync } = require("child_process");
 const path  = require("path");
-const { default: Utils } = require("../extension/src/utils/Utils");
+const { default: Utils } = require("../shared/Utils.js");
 
 const Simulator = new class {
     /**
