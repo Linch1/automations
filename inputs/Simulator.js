@@ -22,14 +22,14 @@ const Simulator = new (class {
 
     let tmpPath;
     try {
-      // 🟢 Lancia Nautilus e prendi il PID
+
       let tmpDir = "/tmp/input/dragdrop";
-      if(fs.existsSync(tmpDir)) fs.rmSync(tmpDir); // clear the driectory from old files
-      
-      tmpPath = path.join(tmpDir, path.basename(filePath));
-      fs.mkdirSync(path.dirname(tmpPath), {recursive:true});
-      fs.copyFileSync(filePath, tmpPath);
-      
+      if(fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true }); // clear the driectory from old files
+      fs.mkdirSync(tmpDir, {recursive:true});
+
+      fs.copyFileSync(filePath, path.join(tmpDir, path.basename(filePath)));
+
+      // open nautils and get pid
       const nautilus = spawn("nautilus", ["--select", tmpPath], {
         detached: true,
         stdio: "ignore"
