@@ -23,7 +23,10 @@ const Simulator = new (class {
     let tmpPath;
     try {
       // 🟢 Lancia Nautilus e prendi il PID
-      tmpPath = path.join( "/tmp/input/dragdrop", path.basename(filePath));
+      let tmpDir = "/tmp/input/dragdrop";
+      if(fs.existsSync(tmpDir)) fs.rmSync(tmpDir); // clear the driectory from old files
+      
+      tmpPath = path.join(tmpDir, path.basename(filePath));
       fs.mkdirSync(path.dirname(tmpPath), {recursive:true});
       fs.copyFileSync(filePath, tmpPath);
       
@@ -80,9 +83,11 @@ const Simulator = new (class {
     } catch (error) {
       console.error("Errore durante l'interazione:", error);
     } finally {
+      /* avoid removing it instantly, otherwise the upload may fail
       if(tmpPath){
         if(fs.existsSync(tmpPath)) fs.rmSync(tmpPath)
       }
+      */
     }
   }
 })();
