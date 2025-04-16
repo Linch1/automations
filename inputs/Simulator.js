@@ -24,7 +24,7 @@ const Simulator = new (class {
     try {
       // 🟢 Lancia Nautilus e prendi il PID
       tmpPath = path.join( "/tmp/input/dragdrop", path.basename(filePath));
-      fs.mkdirSync(tmpPath, {recursive:true});
+      fs.mkdirSync(path.dirname(tmpPath), {recursive:true});
       fs.copyFileSync(filePath, tmpPath);
       
       const nautilus = spawn("nautilus", ["--select", tmpPath], {
