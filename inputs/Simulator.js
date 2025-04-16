@@ -1,7 +1,8 @@
 const { exec, execSync } = require("child_process");
 const path  = require("path");
+const { default: Utils } = require("../extension/src/utils/Utils");
 
-const Simulator = new class{
+const Simulator = new class {
     /**
      * Apre Nautilus sul file e simula un drag and drop con xdotool.
      * @param {string} filePath - Percorso assoluto del file da selezionare in Nautilus
@@ -14,13 +15,14 @@ const Simulator = new class{
       }
     
       // Apri Nautilus con il file selezionato
-      exec(`nautilus --select "${filePath}" &`, (err) => {
+      exec(`nautilus --select "${filePath}" &`, async (err) => {
         if (err) {
           console.error("Errore nell'aprire Nautilus:", err);
           return;
         }
     
         // Attendi che la finestra si apra
+        await Utils.sleep(2000);
         try {
         // Ottieni l'ID finestra Nautilus
         const winId = execSync(`xdotool search --onlyvisible --class "Nautilus" | tail -1`).toString().trim();
@@ -29,6 +31,7 @@ const Simulator = new class{
             return;
         }
 
+        console.log("moving window to x:0 y:0")
         // Sposta la finestra
         execSync(`xdotool windowmove ${winId} 0 0`);
 
