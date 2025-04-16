@@ -38,7 +38,7 @@ const Simulator = new class {
         console.log("moving window to x:0 y:0")
         // Sposta la finestra
         execSync(`xdotool windowmove ${winId} 0 0`);
-        
+
         await sleep(2000);
 
         // Coordinate iniziali e finali
@@ -57,6 +57,7 @@ const Simulator = new class {
         const moveStep = () => {
             if (i > steps) {
             execSync(`xdotool mouseup 1`);
+            execSync(`xdotool windowkill ${winId}`);
             return;
             }
 
@@ -68,6 +69,8 @@ const Simulator = new class {
         };
 
         moveStep();
+
+
 
         } catch (error) {
         console.error("Errore durante l'interazione con xdotool:", error);
