@@ -20,14 +20,14 @@ const Simulator = new (class {
       return;
     }
 
-    let tmpPath;
+    let tmpDir = "/tmp/input/dragdrop";
+    let tmpPath = path.join(tmpDir, path.basename(filePath))
     try {
 
-      let tmpDir = "/tmp/input/dragdrop";
       if(fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true }); // clear the driectory from old files
-      fs.mkdirSync(tmpDir, {recursive:true});
+      fs.mkdirSync(tmpDir, {recursive:true}); 
 
-      fs.copyFileSync(filePath, path.join(tmpDir, path.basename(filePath)));
+      fs.copyFileSync(filePath, );
 
       // open nautils and get pid
       const nautilus = spawn("nautilus", ["--select", tmpPath], {
