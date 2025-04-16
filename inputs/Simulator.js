@@ -29,6 +29,8 @@ const Simulator = new (class {
 
       fs.copyFileSync(filePath, tmpPath);
 
+      await sleep(2000);
+
       // open nautils and get pid
       const nautilus = spawn("nautilus", ["--select", tmpPath], {
         detached: true,
