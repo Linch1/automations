@@ -3,6 +3,7 @@ const cors = require('@fastify/cors');
 const robot = require('robotjs');
 const {execSync} = require('child_process')
 const {default: clipboardy} = require("clipboardy");
+const Simulator = require('./Simulator');
 const PORT = 6002;
 
 const fastify = Fastify();
@@ -42,6 +43,12 @@ fastify.post('/type', async (request, reply) => {
     await new Promise(resolve => setTimeout(resolve, 300));
     robot.keyTap("v", "control");
     return {status: true};
+});
+
+fastify.post('/dragAndDrop', async (request, reply) => {
+  let {filePath, dragEndX, dragEndY} = request.body;
+  Simulator.fileDrag(filePath, dragEndX, dragEndY);
+  return {status: true};
 });
 
 // Start server
