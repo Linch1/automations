@@ -1,4 +1,4 @@
-const { exec, execSync } = require("child_process");
+const { spawn, execSync } = require("child_process");
 const path = require("path");
 
 async function sleep(ms) {
@@ -9,6 +9,8 @@ const Simulator = new (class {
   /**
    * Apre Nautilus sul file e simula un drag and drop con xdotool.
    * @param {string} filePath - Percorso assoluto del file da selezionare in Nautilus
+   * @param {number} dragEndX - Posizione finale X del trascinamento
+   * @param {number} dragEndY - Posizione finale Y del trascinamento
    */
   async fileDrag(filePath, dragEndX, dragEndY) {
     if (!path.isAbsolute(filePath)) {
@@ -17,20 +19,18 @@ const Simulator = new (class {
     }
 
     try {
-      // Apri Nautilus 
-      await new Promise((resolve, reject) => {
-        exec(`nautilus --select "${filePath}" &`, (err) => {
-          if (err) return reject(err);
-          resolve();
-        });
+      // 🟢 Lancia Nautilus e prendi il PID
+      const nautilus = spawn("nautilus", ["--select", filePath], {
+        detached: true,
+        stdio: "ignore"
       });
 
-      console.log("Nautilus aperto")
+      const nautilusPid = nautilus.pid;
+      console.log("Nautilus PID:", nautilusPid);
 
-      // Attendi che la finestra si apra
-      await sleep(2000);
+      await sleep(2000); // aspetta che si apra la finestra
 
-      // Ottieni ID finestra
+      // 🔍 Trova la finestra
       const winId = execSync(`xdotool search --onlyvisible --class "Nautilus" | tail -1`)
         .toString()
         .trim();
@@ -44,14 +44,13 @@ const Simulator = new (class {
       execSync(`xdotool windowmove ${winId} 0 0`);
       await sleep(1000);
 
-      // Coordinate
+      // 📦 Coordinate drag
       const startX = 280,
         startY = 154;
       const endX = dragEndX,
         endY = dragEndY;
       const steps = 50;
       const interval = 10;
-
       const deltaX = (endX - startX) / steps;
       const deltaY = (endY - startY) / steps;
 
@@ -66,9 +65,13 @@ const Simulator = new (class {
       }
 
       execSync(`xdotool mouseup 1`);
-      execSync(`xdotool windowkill ${winId}`);
+
+      // 🛑 Uccidi SOLO il processo Nautilus che hai avviato
+      process.kill(nautilusPid, "SIGTERM");
+      console.log("Nautilus terminato (PID:", nautilusPid, ")");
+
     } catch (error) {
-      console.error("Errore durante l'interazione con Nautilus o xdotool:", error);
+      console.error("Errore durante l'interazione:", error);
     }
   }
 })();
