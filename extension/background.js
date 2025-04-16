@@ -36,7 +36,7 @@ import getInstagramTab from "./src/chrome_query_tab.js";
     });
 
     ServerWs.on("CREATE_POST", (payload) => {
-        let {url, fileUrl, caption} = payload;
+        let {url, fileUrl, filePath, caption} = payload;
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
             const tab = tabs[0];
             chrome.tabs.update(tab.id, { url: url }, function(updatedTab) {
@@ -44,7 +44,7 @@ import getInstagramTab from "./src/chrome_query_tab.js";
                   if (tabId === updatedTab.id && changeInfo.status === 'complete') {
                     chrome.tabs.onUpdated.removeListener(listener);
                     console.log('✅ Pagina caricata:', newTab.url);
-                    await Actions.createPost(fileUrl, caption)
+                    await Actions.createPost(filePath, caption)
                     ServerWs.emit("POST_CREATED", payload);
                   }
                 };

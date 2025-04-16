@@ -92,8 +92,9 @@ const RequestsUtils = new class {
         await Utils.sleep((text.length*delay) + delay)
     }
 
-    async simulateImageDragAndDrop( url ) {
+    async simulateImageDragAndDrop( filePath ) {
 
+       /*
         fetch(url)
         .then(res => res.blob())
         .then(blob => blob.arrayBuffer())
@@ -148,6 +149,19 @@ const RequestsUtils = new class {
 
 
         });
+       */
+    
+        await fetch(Settings.INPUTS_SERVER + "/dragAndDrop", {
+            method: "post",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                filePath, dragEndX:957, dragEndY:594
+            })
+        })
+
     }
 
     async clickNextStepInPostCreation(){ //TESTO-IT

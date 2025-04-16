@@ -12,14 +12,14 @@ const Actions = new class {
         await RequestsUtils.typeInSearch(username);
     }
 
-    async createPost(fileUrl, caption){
+    async createPost(filePath, caption){
         await RequestsUtils.waitForSelector(RequestsUtils.SELECTORS.CREATE_POST_BUTTON);
         await RequestsUtils.openNewPost();
         await Utils.sleep(1000);
         await RequestsUtils.clickConfirmPostCreationIfPresent();
         await Utils.sleep(1000);
         await RequestsUtils.waitForSelector(RequestsUtils.SELECTORS.CREATE_POST_FILE_UPLOAD);
-        await RequestsUtils.simulateImageDragAndDrop(fileUrl);
+        await RequestsUtils.simulateImageDragAndDrop(filePath);
 
         await Utils.sleep(1000);
         await RequestsUtils.waitForSelector(RequestsUtils.SELECTORS.CREATE_POST_CUT_SECTION);
