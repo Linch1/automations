@@ -1,7 +1,11 @@
 const { exec, execSync } = require("child_process");
 const path  = require("path");
-const { default: Utils } = require("../shared/Utils.js");
 
+function sleep(ms){
+  return new Promise( (res) => {
+    setTimeout( res, ms );
+  })
+}
 const Simulator = new class {
     /**
      * Apre Nautilus sul file e simula un drag and drop con xdotool.
@@ -22,7 +26,7 @@ const Simulator = new class {
         }
     
         // Attendi che la finestra si apra
-        await Utils.sleep(2000);
+        await sleep(2000);
         try {
         // Ottieni l'ID finestra Nautilus
         const winId = execSync(`xdotool search --onlyvisible --class "Nautilus" | tail -1`).toString().trim();
