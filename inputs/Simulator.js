@@ -25,6 +25,8 @@ const Simulator = new (class {
         });
       });
 
+      console.log("Nautilus aperto")
+
       // Attendi che la finestra si apra
       await sleep(2000);
 
