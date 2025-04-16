@@ -27,7 +27,7 @@ const Simulator = new (class {
       if(fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true }); // clear the driectory from old files
       fs.mkdirSync(tmpDir, {recursive:true}); 
 
-      fs.copyFileSync(filePath, );
+      fs.copyFileSync(filePath, tmpPath);
 
       // open nautils and get pid
       const nautilus = spawn("nautilus", ["--select", tmpPath], {
