@@ -82,14 +82,19 @@ fastify.get('/upload', async (request, reply) => {
   
   ServerUtils.addUploadedPostToUser(platform, username, postId);
 
+  let type = isVideo?"video":"image";
+
   socket.send({
     type: MessageType.CREATE_POST,
     payload: {
+      platform, 
+      username,
+      postId,
+      type,
+
       profile: profile.name, 
-      platform: platform, 
       url: ServerUtils.getPlatformUrl(platform), 
-      fileUrl: Paths.getPostMediaUrl(platform, username, postId, isVideo?"video":"image"),
-      filePath: Paths.getDownloadPath(platform, username, postId, isVideo?"video":"image"),
+      fileUrl: Paths.getPostMediaUrl(platform, username, postId, type),
       caption: profile.default_caption || post.caption
     }
   })

@@ -3,6 +3,7 @@ import { spawn } from 'child_process';
 import ExtensionWs from "../extension/Ws.js";
 import Utils from "../../../../shared/Utils.js";
 import { type } from "os";
+import ServerPaths from "../../../../server/src/lib/Paths.js";
 
 
 class MessagesHandler {
@@ -100,7 +101,13 @@ class MessagesHandler {
         console.log("Recived open browser with payload=", payload);
         await this._waitForPreviousConnectionToEstablish(); // wait for previous open browser action to complete
 
-        let {profile, platform, url, fileUrl, filePath, caption} = payload;
+        let {
+            profile, 
+            platform, 
+            username,
+            postId,
+            type,
+        } = payload;
         
         this._connecting = true;
 
@@ -114,7 +121,7 @@ class MessagesHandler {
         await Utils.sleep(2000);
         let extensionSocket = await ExtensionWs.connections.get(profile);
         extensionSocket.chromeProcess = chromeProcess;
-        extensionSocket.send({type: MessageType.CREATE_POST, payload});
+        extensionSocket.send({type: MessageType.CREATE_POST, payload: {...payload, filePath: ServerPaths.getDownloadPath(platform, username, postId, type) } });
     }
 
     async _waitForPreviousConnectionToEstablish(){
