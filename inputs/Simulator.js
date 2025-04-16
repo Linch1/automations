@@ -38,6 +38,8 @@ const Simulator = new class {
         console.log("moving window to x:0 y:0")
         // Sposta la finestra
         execSync(`xdotool windowmove ${winId} 0 0`);
+        
+        await sleep(2000);
 
         // Coordinate iniziali e finali
         const startX = 280, startY = 154;
