@@ -12,7 +12,7 @@ const Simulator = new class {
      * @param {string} filePath - Percorso assoluto del file da selezionare in Nautilus
      * // simulateFileDrag("/home/tuoutente/Downloads/test.txt");
      */
-    fileDrag(filePath, dragEndX, dragEndY) {
+    async fileDrag(filePath, dragEndX, dragEndY) {
       if (!path.isAbsolute(filePath)) {
         console.error("Il percorso del file deve essere assoluto.");
         return;
@@ -54,26 +54,21 @@ const Simulator = new class {
         execSync(`xdotool mousedown 1`);
 
         let i = 0;
-        const moveStep = () => {
-            if (i > steps) {
-            execSync(`xdotool mouseup 1`);
-            execSync(`xdotool windowkill ${winId}`);
-            return;
-            }
+        while( i <= steps ){
+          const curX = Math.round(startX + deltaX * i);
+          const curY = Math.round(startY + deltaY * i);
+          execSync(`xdotool mousemove ${curX} ${curY}`);
 
-            const curX = Math.round(startX + deltaX * i);
-            const curY = Math.round(startY + deltaY * i);
-            execSync(`xdotool mousemove ${curX} ${curY}`);
-            i++;
-            setTimeout(moveStep, interval);
-        };
+          await sleep(interval);
+          i++;
+        }
 
-        moveStep();
-
+        execSync(`xdotool mouseup 1`);
+        execSync(`xdotool windowkill ${winId}`);
 
 
         } catch (error) {
-        console.error("Errore durante l'interazione con xdotool:", error);
+          console.error("Errore durante l'interazione con xdotool:", error);
         }
 
       });
