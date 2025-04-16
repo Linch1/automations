@@ -41,11 +41,11 @@ export default new class {
         if(!fs.existsSync(path.dirname(filepath)))fs.mkdirSync(path.dirname(filepath), {recursive:true});
         return filepath;
     }
-    getDownloadPath(platform, username, id, type){
+    getDownloadPath(platform, username, id, type, absolute=false){
         let ext = type=="video"?"mp4":"jpg";
         let filepath = path.join(this.DOWNLOADS_DIR, platform, username, type, id+"."+ext);
         if(!fs.existsSync(path.dirname(filepath)))fs.mkdirSync(path.dirname(filepath), {recursive:true});
-        return filepath;
+        return absolute?path.resolve(filepath):filepath;
     }
     getPostMediaUrl(platform, username, id, type){
         let ext = type=="video"?"mp4":"jpg";

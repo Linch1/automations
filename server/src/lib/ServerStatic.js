@@ -89,6 +89,7 @@ fastify.get('/upload', async (request, reply) => {
       platform: platform, 
       url: ServerUtils.getPlatformUrl(platform), 
       fileUrl: Paths.getPostMediaUrl(platform, username, postId, isVideo?"video":"image"),
+      filePath: Paths.getDownloadPath(platform, username, postId, isVideo?"video":"image"),
       caption: profile.default_caption || post.caption
     }
   })
