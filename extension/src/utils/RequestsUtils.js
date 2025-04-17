@@ -167,18 +167,21 @@ const RequestsUtils = new class {
     async clickNextStepInPostCreation(){ //TESTO-IT
         let timeout = 10_000;
         while(timeout>0){
-            let r = await Requests.executeBrowserCommand(`
+            let {x,y} = await Requests.executeBrowserCommand(`
                 let divs = Array.from(document.querySelectorAll("[role='dialog'] div"));
                 let el = divs.find(div => div.textContent == "Avanti") || divs.find(div => div.textContent == "Condividi");
                 if(el){
-                    el.querySelector("[role='button']").click();
-                    el != null;
+                    el.querySelector("[role='button']").getBoundingClientRect();
                 } else {
-                    undefined;
+                    {};
                 }
             `)
             //console.log("Resposne: ", r, r);
-            if(r) return;
+            if(x&&y) {
+                console.log("Clinking at x=", x+10, " y=", y+10 );
+                await fetch(Settings.INPUTS_SERVER + `/click?x=${x+10}&y=${y+10}`)
+                return 
+            }
             await Utils.sleep(500);
             timeout -= 500;
         }
