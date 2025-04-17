@@ -79,12 +79,15 @@ fastify.get('/upload', async (request, reply) => {
     return {status: false, error: "This post was already uploaded"};
   }
 
-  console.log("sending create post request", socket.send.toString())
+  console.log("sending create post request for post id=", postId)
   
   ServerUtils.addUploadedPostToUser(platform, username, postId);
 
   let type = isVideo?"video":"image";
 
+  let caption = profile.default_caption || post.caption;
+  caption = caption.replaceAll(username, profile.accounts[platform].username)
+ 
   socket.send({
     type: MessageType.CREATE_POST,
     payload: {
@@ -96,7 +99,7 @@ fastify.get('/upload', async (request, reply) => {
       profile: profile.name, 
       url: ServerUtils.getPlatformUrl(platform), 
       fileUrl: Paths.getPostMediaUrl(platform, username, postId, type),
-      caption: profile.default_caption || post.caption.replaceAll(username, profile[platform].username)
+      caption: 
     }
   })
   
