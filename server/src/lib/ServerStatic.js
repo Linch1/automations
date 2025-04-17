@@ -99,7 +99,7 @@ fastify.get('/upload', async (request, reply) => {
       profile: profile.name, 
       url: ServerUtils.getPlatformUrl(platform), 
       fileUrl: Paths.getPostMediaUrl(platform, username, postId, type),
-      caption: 
+      caption
     }
   })
   
