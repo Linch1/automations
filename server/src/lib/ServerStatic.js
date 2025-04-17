@@ -75,6 +75,7 @@ fastify.get('/upload', async (request, reply) => {
     console.log("missing socket for profile=", profile.name);
     return {status: false, error: "Client socket is not connected to server"};
   } else if( ServerUtils.wasAlreadyUploaded(platform, username, postId) ) {
+    console.log("post already uploaded. post id=", postId)
     return {status: false, error: "This post was already uploaded"};
   }
 
