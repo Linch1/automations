@@ -95,7 +95,7 @@ fastify.get('/upload', async (request, reply) => {
       profile: profile.name, 
       url: ServerUtils.getPlatformUrl(platform), 
       fileUrl: Paths.getPostMediaUrl(platform, username, postId, type),
-      caption: profile.default_caption || post.caption
+      caption: profile.default_caption || post.caption.replaceAll(username, profile[platform].username)
     }
   })
   
