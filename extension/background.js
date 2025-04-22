@@ -65,7 +65,7 @@ function openUrl(url){
             if(reel) userEdge.node.play_count = reel.node.media.play_count;
         }
 
-        console.log(`scraped user feed for ${username}`, scrapedEdges);
+        console.log(`scraped user feed for ${username}`, userEdges);
         ServerWs.emit("USER_FEED", {edges: userEdges, tabUrl: feedUrl});
         
     });
