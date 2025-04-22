@@ -28,12 +28,18 @@ export default new class {
         if(!fs.existsSync(path.dirname(filepath)))fs.mkdirSync(path.dirname(filepath), {recursive:true});
         return filepath;
     }
+    
+    getScheduleGeneralPath(){
+        let filepath = path.join(this.SCHEDULE_PATH, "scraping", "general.json");
+        if(!fs.existsSync(path.dirname(filepath))) fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        if(!fs.existsSync(filepath)) fs.writeFileSync(filepath, "{}");
+        return filepath;
+    }
+
     getPlatformUploadsPaths(platform){
         let filepath = path.join(this.DATA_DIR, "uploads", platform+".json");
-        if(!fs.existsSync(path.dirname(filepath))) {
-            fs.mkdirSync(path.dirname(filepath), {recursive:true});
-            fs.writeFileSync(filepath, "{}");
-        }
+        if(!fs.existsSync(path.dirname(filepath))) fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        if(!fs.existsSync(filepath)) fs.writeFileSync(filepath, "{}");
         return filepath;
     }
     getPlatformPostSchedulePath(platform){

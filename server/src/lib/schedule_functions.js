@@ -118,74 +118,81 @@ function getNextAvailableTime(startTime, busySlots, dayEnd) {
 }
 
 
-export function generateDaySchedule(schedule, day, dayStart, nextDayStart, usersToScrape){
+export function generateDaySchedule(platform, config, schedule, day, dayStart, nextDayStart, usersToScrape){
 
-  for (const [platform, config] of Object.entries(master)) {
+  const { profiles: platformProfiles, dailyUsersScrapingLimit } = config;
 
-    const { profiles: platformProfiles, dailyUsersScrapingLimit } = config;
+  for( let profile in platformProfiles ){
+    if(usersToScrape && !usersToScrape[profile])continue;
 
-    for( let profile in platformProfiles ){
-      if(usersToScrape && !usersToScrape[profile])continue;
-
-      if(schedule[profile]){ // clear schedule for the day that has to be scheduled
-        schedule[profile].days[day] = {};
-        for( let ts in schedule[profile].timestamps){
-          if( ts > dayStart && ts < nextDayStart ) delete schedule[profile].timestamps[ts];
-        }
+    if(schedule[profile]){ // clear schedule for the day that has to be scheduled
+      schedule[profile].days[day] = {};
+      for( let ts in schedule[profile].timestamps){
+        if( ts > dayStart && ts < nextDayStart ) delete schedule[profile].timestamps[ts];
       }
-
-      if(!schedule[profile]) schedule[profile] = { days: {}, timestamps: {} };
-      if(!schedule[profile].days[day]) schedule[profile].days[day] = {};
-
-      let currentTime = dayStart;
-      let pauseTimestamps = generatePauseTimestamps( platformProfiles[profile], dayStart );
-      let alreadyScraped = [];
-      
-      for( let i = 0; i < dailyUsersScrapingLimit; i ++){
-        currentTime = getNextAvailableTime(currentTime, pauseTimestamps, nextDayStart);
-        if (!currentTime) {
-          console.warn(`Nessuno slot disponibile per profile=${profile} su ${day}.`);
-          break;    
-        }
-
-        let userToScrape = usersToScrape ? usersToScrape[profile].shift() : getProfileToScrape(platform, currentTime);
-        if(!userToScrape || alreadyScraped.includes(userToScrape)) break; // avoid scraping the same user twice the same day
-
-        alreadyScraped.push(userToScrape);
-        tracking[platform][userToScrape].count = (tracking[platform][userToScrape].count || 0) + 1;
-        tracking[platform][userToScrape].lastScrapedTs = currentTime;
-
-        
-        schedule[profile].days[day][Utils.formatTimestampToTime(currentTime)] = userToScrape;
-        schedule[profile].timestamps[currentTime] = userToScrape;
-        // Add cooldown time for next task
-        let sleep = getRandomDuration();
-        currentTime += sleep;
-      }
-
     }
 
-    fs.writeFileSync(Paths.getPlatformScrapingSchedulePath(platform), JSON.stringify(schedule, null, 2));
+    if(!schedule[profile]) schedule[profile] = { days: {}, timestamps: {} };
+    if(!schedule[profile].days[day]) schedule[profile].days[day] = {};
+
+    let currentTime = dayStart;
+    let pauseTimestamps = generatePauseTimestamps( platformProfiles[profile], dayStart );
+    let alreadyScraped = [];
+    
+    for( let i = 0; i < dailyUsersScrapingLimit; i ++){
+      currentTime = getNextAvailableTime(currentTime, pauseTimestamps, nextDayStart);
+      if (!currentTime) {
+        console.warn(`Nessuno slot disponibile per profile=${profile} su ${day}.`);
+        break;    
+      }
+
+      let userToScrape = usersToScrape ? usersToScrape[profile].shift() : getProfileToScrape(platform, currentTime);
+      if(!userToScrape || alreadyScraped.includes(userToScrape)) break; // avoid scraping the same user twice the same day
+
+      alreadyScraped.push(userToScrape);
+      tracking[platform][userToScrape].count = (tracking[platform][userToScrape].count || 0) + 1;
+      tracking[platform][userToScrape].lastScrapedTs = currentTime;
+
+      
+      schedule[profile].days[day][Utils.formatTimestampToTime(currentTime)] = userToScrape;
+      schedule[profile].timestamps[currentTime] = userToScrape;
+      // Add cooldown time for next task
+      let sleep = getRandomDuration();
+      currentTime += sleep;
+    }
+
   }
+
+  fs.writeFileSync(Paths.getPlatformScrapingSchedulePath(platform), JSON.stringify(schedule, null, 2));
 
 }
 export function generateSchedule() {
-  const schedule = {};
+
   const now = new Date();
   const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const currentDay = now.getDay();
-
   // Filter the tasks to the days from now until end of week
   const weekDaysToSchedule = days.slice(currentDay).filter(d => d !== 'sunday');
+  let dayStart, nextDayStart;
   
-  for( let day of weekDaysToSchedule ){
-    let date = new Date(now);
-    date.setDate(now.getDate() + (days.indexOf(day) - currentDay))
-    date.setHours(0, 0, 0, 0)
-    const dayStart = parseInt(date.getTime()/1000);
-    const nextDayStart = dayStart + 60 * 60 * 24;
-    generateDaySchedule(schedule, day, dayStart, nextDayStart);
-  };
+  for (const [platform, config] of Object.entries(master)) {
+    const schedule = {};
+    
+    for( let day of weekDaysToSchedule ){
+      let date = new Date(now);
+      date.setDate(now.getDate() + (days.indexOf(day) - currentDay))
+      date.setHours(0, 0, 0, 0)
+      dayStart = parseInt(date.getTime()/1000);
+      nextDayStart = dayStart + 60 * 60 * 24;
+      generateDaySchedule(platform, config, schedule, day, dayStart, nextDayStart);
+    };
+
+  }
+
+  let p = Paths.getScheduleGeneralPath();
+  let general = JSON.parse(fs.readFileSync(p, "utf-8"));
+  general.regenerateAt = nextDayStart;
+  fs.writeFileSync(p, JSON.stringify(general, null, 2));
 
   // the tracking will be effectively update once the profile will be scraped
   //fs.writeFileSync(Paths.TRACKING_PATH, JSON.stringify(tracking, null, 2));
