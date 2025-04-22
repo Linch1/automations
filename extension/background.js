@@ -51,13 +51,16 @@ function openUrl(url){
         let userFeedKey = "xdt_api__v1__feed__user_timeline_graphql_connection"
         let userFeed = await NetworkRequests.listenForBodyKey(userFeedKey);
         let userEdges = userFeed[userFeedKey].edges;
+        console.log(`Retrived user edges: `, userEdges);
 
         await openUrl(reelsUrl);
         let reelsFeedKey = "xdt_api__v1__clips__user__connection_v2"
         let reelsFeed = await NetworkRequests.listenForBodyKey(reelsFeedKey);
         let reelsEdges = reelsFeed[reelsFeedKey].edges;
+        console.log(`Retrived reels edges: `, reelsEdges);
 
         for( let userEdge of userEdges ){
+            console.log("User edge: ", userEdge);
             let reel = reelsEdges.find( e => e.node.media.id == userEdge.node.id );
             userEdge.node.play_count = reel.node.media.play_count;
         }
