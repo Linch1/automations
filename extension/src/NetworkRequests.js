@@ -3,8 +3,6 @@ const NetworkRequests = new class  {
     constructor(){
         this._registeredKeys = [];
         this._listeners = {};
-        this._id = 0;
-        this._listen();
     }
 
     addListener(key, fn) {
