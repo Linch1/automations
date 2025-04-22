@@ -6,27 +6,33 @@ import "./src/chrome_listen_debugger.js";
 import getInstagramTab from "./src/chrome_query_tab.js";
 
 
-
+let activatedDebugger = {/* tabId: bool */};
 function openUrl(url){
     return new Promise( res => {
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
             const tab = tabs[0];
-            
-            chrome.debugger.attach({ tabId: tab.id }, "1.0", function() {
-                if (chrome.runtime.lastError) {
-                    console.error("Error attaching debugger:", chrome.runtime.lastError.message);
-                    return;
-                }
-                chrome.debugger.sendCommand({ tabId: tab.id }, "Network.enable", {}, function() {
+
+            if(!activatedDebugger[tab.id]){
+                chrome.debugger.attach({ tabId: tab.id }, "1.0", function() {
                     if (chrome.runtime.lastError) {
-                        console.error("Errore Network.enable:", chrome.runtime.lastError.message);
+                        console.error("Error attaching debugger:", chrome.runtime.lastError.message);
                         return;
                     }
-                    // Una volta pronto, forza il redirect verso la pagina target
-                    chrome.tabs.update(tab.id, { url: url });
-                    res()
+                    chrome.debugger.sendCommand({ tabId: tab.id }, "Network.enable", {}, function() {
+                        if (chrome.runtime.lastError) {
+                            console.error("Errore Network.enable:", chrome.runtime.lastError.message);
+                            return;
+                        }
+                        // Una volta pronto, forza il redirect verso la pagina target
+                        activatedDebugger[tab.id] = true;
+                        chrome.tabs.update(tab.id, { url: url });
+                        res();
+                    });
                 });
-            });
+            } else {
+                chrome.tabs.update(tab.id, { url: url });
+                res();
+            }
         });
     });
 }
