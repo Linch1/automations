@@ -62,7 +62,7 @@ function openUrl(url){
         for( let userEdge of userEdges ){
             console.log("User edge: ", userEdge);
             let reel = reelsEdges.find( e => e.node.media.id == userEdge.node.id );
-            userEdge.node.play_count = reel.node.media.play_count;
+            if(reel) userEdge.node.play_count = reel.node.media.play_count;
         }
 
         console.log(`scraped user feed for ${username}`, scrapedEdges);
