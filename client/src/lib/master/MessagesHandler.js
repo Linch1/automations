@@ -80,7 +80,7 @@ class MessagesHandler {
         console.log("Recived open browser with payload=", payload);
         await this._waitForPreviousConnectionToEstablish(); // wait for previous open browser action to complete
 
-        let {profile, platform, url, username} = payload;
+        let {profile, platform} = payload;
         
         this._connecting = true;
 
@@ -94,7 +94,7 @@ class MessagesHandler {
         await Utils.sleep(2000);
         let extensionSocket = await ExtensionWs.connections.get(profile);
         extensionSocket.chromeProcess = chromeProcess;
-        extensionSocket.send({type: MessageType.OPEN_URL, payload: {url: url, username}});
+        extensionSocket.send({type: MessageType.OPEN_URL, payload});
     }
 
     [MessageType.CREATE_POST] = async (payload) => {
