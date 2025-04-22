@@ -20,12 +20,14 @@ export default new class {
 
     getDownloadJsonPath(platform, username){
         let filepath = path.join(this.DOWNLOADS_DIR, platform, username, "downloads.json");
-        if(!fs.existsSync(path.dirname(filepath)))fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        if(!fs.existsSync(path.dirname(filepath))) fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        if(!fs.existsSync(filepath)) fs.writeFileSync(filepath, "{}");
         return filepath;
     }
     getPlatformScrapingSchedulePath(platform){
         let filepath = path.join(this.SCHEDULE_PATH, "scraping", platform+".json");
-        if(!fs.existsSync(path.dirname(filepath)))fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        if(!fs.existsSync(path.dirname(filepath))) fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        if(!fs.existsSync(filepath)) fs.writeFileSync(filepath, "{}");
         return filepath;
     }
     
@@ -45,6 +47,7 @@ export default new class {
     getPlatformPostSchedulePath(platform){
         let filepath = path.join(this.SCHEDULE_PATH, "post", platform+".json");
         if(!fs.existsSync(path.dirname(filepath)))fs.mkdirSync(path.dirname(filepath), {recursive:true});
+        if(!fs.existsSync(filepath)) fs.writeFileSync(filepath, "{}");
         return filepath;
     }
     getDownloadPath(platform, username, id, type, absolute=false){
