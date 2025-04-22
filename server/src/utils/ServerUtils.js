@@ -73,7 +73,13 @@ export default new class {
 
                     for( let username of toScrape[profile] ){
                         console.log(`[scrape] sent open browser command on platform=${platform} profile=${profile} username=${username}`);
-                        socket.send({type: MessageType.OPEN_BROWSER, payload: { platform, profile, username, url: `https://instagram.com/${username}` }});
+                        socket.send({
+                            type: MessageType.OPEN_BROWSER, 
+                            payload: { 
+                                platform, profile, username, 
+                                feedUrl: `https://instagram.com/${username}`, 
+                                reelsUrl: `https://instagram.com/${username}/reels/`
+                            }});
                         break;
                     }
 

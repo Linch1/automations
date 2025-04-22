@@ -26,6 +26,20 @@ const Utils = new class {
             setTimeout( res, ms );
         });
     }
+    
+    checkIfKey(jsonObj, keyString) {
+        const keys = keyString.split('.');
+      
+        let current = jsonObj;
+        for (const key of keys) {
+          if (current && Object.prototype.hasOwnProperty.call(current, key)) {
+            current = current[key];
+          } else {
+            return false;
+          }
+        }
+        return true;
+      }
 
    
 }
