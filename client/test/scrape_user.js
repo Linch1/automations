@@ -1,5 +1,5 @@
-import MessageType from "../../shared/MessageType";
-import MessagesHandler from "../src/lib/master/MessagesHandler";
+import MessageType from "../../shared/MessageType.js";
+import MessagesHandler from "../src/lib/master/MessagesHandler.js";
 import ExtensionWsServer from "../src/lib/extension/Ws.js";
 
 console.log("starting extensions server")
