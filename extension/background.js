@@ -46,7 +46,7 @@ function openUrl(url){
 
         console.log("Recived OPEN_URL request", payload);
         let {feedUrl, reelsUrl, url, username} = payload;
-        
+        //asd
         await openUrl(feedUrl);
         let userFeedKey = "xdt_api__v1__feed__user_timeline_graphql_connection"
         let userFeed = await NetworkRequests.listenForBodyKey(userFeedKey);
