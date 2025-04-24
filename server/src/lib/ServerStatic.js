@@ -66,6 +66,7 @@ fastify.get('/swipe', async (request, reply) => {
 
 fastify.get('/upload', async (request, reply) => {
   let {platform, username, postId, isVideo, direction} =  request.query;
+  isVideo = isVideo=="true"?true:false;
   
   let profile = await ServerUtils.findProfileThatManageUsername(username);
   let post  = await ServerUtils.getPostInformations({platform, username, postId});
