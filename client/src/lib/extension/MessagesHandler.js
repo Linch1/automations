@@ -21,7 +21,7 @@ class MessagesHandler {
         let profile = socket.profile;
         let platform = socket.platform;
         
-        console.log(`Sending post created to master. profile=${profile} platform=${platform} username=${username} postId=${postId}`);
+        console.log(`Sending post created to master. profile=${profile} platform=${platform} username=${payload.username} postId=${payload.postId}`);
         socket.endTask();
         MasterWs.send({type: MessageType.POST_CREATED, payload: payload});
     }
