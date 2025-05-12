@@ -14,10 +14,10 @@ const username = args[0];
 
 Ws.run();
 setTimeout(async () => {
-    let socket = Ws.connections.get(profile);
     let profileJson = await ServerUtils.findProfileThatManageUsername(username);
     let platform = profileJson.platforFound;
     let profile = profileJson.name;
+    let socket = Ws.connections.get(profile);
 
     console.log(`[scrape] sent open browser command on platform=${platform} profile=${profile} username=${username}`);
     socket.send({
