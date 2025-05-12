@@ -171,9 +171,19 @@ export default new class {
             const content = await fs.promises.readFile(categoryPath, 'utf-8');
             const categoryInfo = JSON.parse(content);
             for( let platform in categoryInfo.accounts ){
-                if(categoryInfo.accounts[platform].users.includes(username)) return categoryInfo;
+                if(categoryInfo.accounts[platform].users.includes(username)) return {...categoryInfo, profilePath: categoryPath};
             }
         }
+    }
+
+    async removeUsernameFromHisProfile(username){
+        let profile = await this.findProfileThatManageUsername(username);
+        let index = profile.accounts.indexOf(username);
+        if (index !== -1) {
+            console.log("[warn] not found username while removing it")
+            profile.accounts.splice(index, 1);
+        }
+        fs.writeFileSync(profile.profilePath, JSON.stringify(profile, "", 2));
     }
 
     async traverseDownloads( liked=false, uploaded=false ) {

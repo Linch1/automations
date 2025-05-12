@@ -50,6 +50,11 @@ function openUrl(url){
         await openUrl(feedUrl);
         let userFeedKey = "xdt_api__v1__feed__user_timeline_graphql_connection"
         let userFeed = await NetworkRequests.listenForBodyKey(userFeedKey);
+        if(!userFeed /*due to timeout, probably profile does not exists anymore*/){
+            ServerWs.emit("USER_REMOVED", {tabUrl: feedUrl, username});
+            return;
+        }
+
         let userEdges = userFeed[userFeedKey].edges;
         console.log(`Retrived user edges: `, userEdges);
 
@@ -67,11 +72,10 @@ function openUrl(url){
 
         console.log(`scraped user feed for ${username}`, userEdges);
         ServerWs.emit("USER_FEED", {edges: userEdges, tabUrl: feedUrl});
-        
     });
 
     ServerWs.on("CREATE_POST", (payload) => {
-        let {url, fileUrl, filePath, caption} = payload;
+        let {url, fileUrl, filePath, caption, username, postId} = payload;
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
             const tab = tabs[0];
             chrome.tabs.update(tab.id, { url: url }, function(updatedTab) {

@@ -1,4 +1,4 @@
-import Utils from "./utils/Utils.js";
+
 const NetworkRequests = new class  {
     constructor(){
         this._registeredKeys = [];
@@ -22,10 +22,14 @@ const NetworkRequests = new class  {
         return wrapped;
     }
     
-    async listenForBodyKey(key){
-        return new Promise( res => {
+    async listenForBodyKey(key, timeout=30_000){
+        return new Promise( (res,rej) => {
             this._registeredKeys.push(key);
             this.addListener(key, (responseObj) => res(responseObj));
+
+            setTimeout(() => { // timeout
+                this.foundKey(key, null);
+            }, timeout);
         });
     }
 

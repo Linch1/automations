@@ -20,11 +20,20 @@ class MessagesHandler {
     [MessageType.POST_CREATED] = (socket, payload)=>{
         let profile = socket.profile;
         let platform = socket.platform;
-        console.log(`Sending user feed to master profile=${profile} platform=${platform}`)
+        
+        console.log(`Sending post created to master. profile=${profile} platform=${platform} username=${username} postId=${postId}`);
+        socket.endTask();
+        MasterWs.send({type: MessageType.POST_CREATED, payload: payload});
+    }
+
+    [MessageType.USER_REMOVED] = (socket, payload)=>{
+        let profile = socket.profile;
+        let platform = socket.platform;
+        let {username, tabUrl} = payload;
+        console.log(`Sending user removed to master profile=${profile} platform=${platform} username=${username}`)
         
         socket.endTask();
-        
-        //MasterWs.send({type: MessageType.USER_FEED, payload: {profile, platform,data:payload}});
+        MasterWs.send({type: MessageType.USER_REMOVED, payload: {profile, platform, username}});
     }
     
     [MessageType.ERR_LOG_IN]= (socket, payload)=>{

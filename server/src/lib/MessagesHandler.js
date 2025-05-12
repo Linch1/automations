@@ -45,6 +45,21 @@ class MessagesHandler {
         
     }
 
+    [MessageType.POST_CREATED] = (socket, payload)=>{
+        let profile = socket.profile;
+        let platform = socket.platform;
+        let {username, postId} = payload;
+        console.log(`recived post created from client. profile=${profile} platform=${platform} username=${username} postId=${postId}`);
+        ServerUtils.addUploadedPostToUser(platform, username, postId);
+    }
+
+
+    [MessageType.USER_REMOVED] = async (socket, payload)=>{
+        let {profile, platform, username} = payload;
+        console.log(`Recived USER REMOVED from client for profile=${profile} platform=${platform} username=${username}`);
+        await ServerUtils.removeUsernameFromHisProfile(username);
+    }
+
     [MessageType.ERR_LOG_IN]= (socket, payload)=>{
         let {profile, platform} = payload;
         console.log(`Recived error login to master profile=${profile} platform=${platform}`)

@@ -3,7 +3,11 @@
 - fare una gui dove puoi caricare il media in un altra lingua e lo indicizza bene, al momento dell'upload puoi selezionare la lingua in cui caricare,
     oppure specificarla nel json del profilo.
 
+
+----
+
 - fare che la schedule viene create in automatico
 
-
 - markare un file come uploaded solo una votla che effettivamente è stato uploadato
+
+- gestire profili instagram che non ci sono piu (https://www.instagram.com/onlyartloverz)

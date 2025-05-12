@@ -82,7 +82,7 @@ fastify.get('/upload', async (request, reply) => {
 
   console.log("sending create post request for post id=", postId)
   
-  ServerUtils.addUploadedPostToUser(platform, username, postId);
+  // video now is marked as uploaded when the upload confirmation is recived from the client. ServerUtils.addUploadedPostToUser(platform, username, postId);
 
   let type = isVideo?"video":"image";
 
