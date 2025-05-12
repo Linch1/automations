@@ -2,6 +2,7 @@ import Ws from "../src/lib/Ws.js";
 import ServerUtils from "../src/utils/ServerUtils.js";
 import "../src/lib/ServerStatic.js"
 import {config} from "dotenv";
+import MessageType from "../../shared/MessageType.js";
 config();
 
 const args = process.argv.slice(2); // Skip the first two default arguments
