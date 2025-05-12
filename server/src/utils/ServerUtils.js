@@ -171,7 +171,7 @@ export default new class {
             const content = await fs.promises.readFile(categoryPath, 'utf-8');
             const categoryInfo = JSON.parse(content);
             for( let platform in categoryInfo.accounts ){
-                if(categoryInfo.accounts[platform].users.includes(username)) return {...categoryInfo, profilePath: categoryPath};
+                if(categoryInfo.accounts[platform].users.includes(username)) return {...categoryInfo, platforFound: platform, profilePath: categoryPath};
             }
         }
     }
