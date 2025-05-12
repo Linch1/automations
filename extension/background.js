@@ -50,7 +50,9 @@ function openUrl(url){
         await openUrl(feedUrl);
         let userFeedKey = "xdt_api__v1__feed__user_timeline_graphql_connection"
         let userFeed = await NetworkRequests.listenForBodyKey(userFeedKey);
+        console.log("Found user feed:", userFeed);
         if(!userFeed /*due to timeout, probably profile does not exists anymore*/){
+            console.log("Emitting USER_REMOVED");
             ServerWs.emit("USER_REMOVED", {tabUrl: feedUrl, username});
             return;
         }

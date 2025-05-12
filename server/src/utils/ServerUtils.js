@@ -178,10 +178,10 @@ export default new class {
 
     async removeUsernameFromHisProfile(username){
         let profile = await this.findProfileThatManageUsername(username);
-        let index = profile.accounts.indexOf(username);
+        let index = profile.accounts[profile.platforFound].users.indexOf(username);
         if (index !== -1) {
             console.log("[warn] not found username while removing it")
-            profile.accounts.splice(index, 1);
+            profile.accounts[profile.platforFound].users.splice(index, 1);
         }
         fs.writeFileSync(profile.profilePath, JSON.stringify(profile, "", 2));
     }

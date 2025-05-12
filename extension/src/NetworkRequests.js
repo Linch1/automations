@@ -26,8 +26,9 @@ const NetworkRequests = new class  {
         return new Promise( (res,rej) => {
             this._registeredKeys.push(key);
             this.addListener(key, (responseObj) => res(responseObj));
-
+            console.log("Starting timeout of 30 seconds");
             setTimeout(() => { // timeout
+                console.log("Timeout has passed of 30 seconds")
                 this.foundKey(key, null);
             }, timeout);
         });
