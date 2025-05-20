@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Heart, HeartIcon, MessageCircle, MessageSquare, Play, Share2, X } from "lucide-react"
+import { Heart, HeartIcon, MessageCircle, MessageSquare, Play, ScanEye, Share2, X } from "lucide-react"
 import Image from "next/image"
 import { SwipeButtons } from "./swipe-buttons"
 import VideoPlayer from "./video-player"
@@ -68,12 +68,17 @@ export function ContentCard({ platform, username, post, handleSwipe }) {
             }
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
+
             <Badge variant="outline" className="bg-black/70 text-white">
               {post.comments} &nbsp; <MessageCircle width={17} />
             </Badge>
 
             <Badge variant="outline" className="bg-black/70 text-white">
               {Utils.formatCompactNumber(post.likes)} &nbsp; <HeartIcon width={17} />
+            </Badge>
+
+            <Badge variant="outline" className="bg-black/70 text-white">
+              {Utils.formatCompactNumber(post.views)} &nbsp; <ScanEye width={17} />
             </Badge>
           </div>
         </div>
