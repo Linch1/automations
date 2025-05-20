@@ -15,7 +15,7 @@ class MessagesHandler {
     [MessageType.USER_FEED]= async (socket, payload)=>{
         //let clientConfig = socket.clientConfig;
         let {platform, profile, data, username} = payload;
-        console.log(`Recived USER_FEED for profile=${profile} on platform=${platform}`);
+        console.log(`Recived USER_FEED for profile=${profile} on platform=${platform} data=${JSON.stringify(data)}`);
 
         
         let formatData =Object.fromEntries(data.map(item => {
@@ -46,13 +46,10 @@ class MessagesHandler {
     }
 
     [MessageType.POST_CREATED] = (socket, payload)=>{
-        let profile = socket.profile;
-        let platform = socket.platform;
-        let {username, postId} = payload;
+        let {username, postId, platform, profile} = payload;
         console.log(`recived post created from client. profile=${profile} platform=${platform} username=${username} postId=${postId}`);
         ServerUtils.addUploadedPostToUser(platform, username, postId);
     }
-
 
     [MessageType.USER_REMOVED] = async (socket, payload)=>{
         let {profile, platform, username} = payload;
